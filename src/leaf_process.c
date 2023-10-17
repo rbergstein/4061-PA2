@@ -14,15 +14,20 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     //TODO(): get <file_path> <pipe_write_end> from argv[]
-
+    char *file_path = argv[1];
+    int pipe_write_end = atoi(argv[2]);
 
     //TODO(): create the hash of given file
-
+    char file_hash[SHA256_BLOCK_SIZE * 2 + 1];
+    hash_data_block(file_hash, file_path);
 
     //TODO(): construct string write to pipe. The format is "<file_path>|<hash_value>"
+    int length = 2 * sizeof(file_path) + sizeof(file_hash);
+    char message[length];
+    sprintf(message, "%s|%s", file_path, file_hash);
 
 
-    if(){
+    if () {
         //TODO(inter submission)
         //TODO(overview): create a file in output_file_folder("output/inter_submission/root*") and write the constructed string to the file
         //TODO(step1): extract the file_name from file_path using extract_filename() in utils.c
@@ -31,7 +36,7 @@ int main(int argc, char* argv[]) {
         //TODO(step4): create and write to file, and then close file
         //TODO(step5): free any arrays that are allocated using malloc!! Free the string returned from extract_root_directory()!! It is allocated using malloc in extract_root_directory()
 
-    }else{
+    } else {
         //TODO(final submission): write the string to pipe
 
         exit(0);

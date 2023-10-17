@@ -35,6 +35,23 @@ int main(int argc, char* argv[]) {
         //TODO(step3): get the location of the new file (e.g. "output/inter_submission/root1" or "output/inter_submission/root2" or "output/inter_submission/root3")
         //TODO(step4): create and write to file, and then close file
         //TODO(step5): free any arrays that are allocated using malloc!! Free the string returned from extract_root_directory()!! It is allocated using malloc in extract_root_directory()
+        char file_name = extract_filename(file_path);
+        char root_dir = extract_root_directory(file_path);
+
+        char new_location[PATH_MAX];
+        sprintf(new_location, "%s%s", output_file_folder, root_dir);
+
+        FILE *fp = fopen(new_location, "w");
+
+        if (fp == NULL) {
+            printf("Cannot open file in leaf process\n");
+            exit(-1);
+        }
+
+       fprintf(fp, "%s", file_hash);
+       fclose(fp);
+
+       free(root_dir);
 
     } else {
         //TODO(final submission): write the string to pipe

@@ -22,25 +22,24 @@ int main(int argc, char* argv[]) {
     hash_data_block(file_hash, file_path);
 
     //TODO(): construct string write to pipe. The format is "<file_path>|<hash_value>"
-    int length = 2 * sizeof(file_path) + sizeof(file_hash);
+    int length = 10 + strlen(file_path) + strlen(file_hash);
     char message[length];
-    sprintf(message, "%s|%s|", file_path, file_hash);
+    sprintf(message, "%s|%s", file_path, file_hash);
 
 
     if () {
         //TODO(inter submission)
         //TODO(overview): create a file in output_file_folder("output/inter_submission/root*") and write the constructed string to the file
         //TODO(step1): extract the file_name from file_path using extract_filename() in utils.c
+        char *file_name = extract_filename(file_path); // returns "WordleStage_2.txt"
         //TODO(step2): extract the root directory(e.g. root1 or root2 or root3) from file_path using extract_root_directory() in utils.c
+        char *root_dir = extract_root_directory(file_path); // returns "root1/"
         //TODO(step3): get the location of the new file (e.g. "output/inter_submission/root1" or "output/inter_submission/root2" or "output/inter_submission/root3")
-        //TODO(step4): create and write to file, and then close file
-        //TODO(step5): free any arrays that are allocated using malloc!! Free the string returned from extract_root_directory()!! It is allocated using malloc in extract_root_directory()
-        char file_name = extract_filename(file_path);
-        char root_dir = extract_root_directory(file_path);
-
         char new_location[PATH_MAX];
         sprintf(new_location, "%s%s", output_file_folder, root_dir);
-
+        //TODO(step4): create and write to file, and then close file
+        char filen[PATH_MAX];
+        sprintf(filen, "%s", file_name);
         FILE *fp = fopen(new_location, "w");
 
         if (fp == NULL) {
@@ -48,10 +47,11 @@ int main(int argc, char* argv[]) {
             exit(-1);
         }
 
-       fprintf(fp, "%s", file_hash);
-       fclose(fp);
+        fprintf(fp, "%s", file_hash);
+        //TODO(step5): free any arrays that are allocated using malloc!! Free the string returned from extract_root_directory()!! It is allocated using malloc in extract_root_directory()
+        fclose(fp);
+        free(root_dir);
 
-       free(root_dir);
 
     } else {
         //TODO(final submission): write the string to pipe

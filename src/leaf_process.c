@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     sprintf(message, "%s|%s|", file_path, file_hash);
 
 
-    if () {
+    if (pipe_write_end == 0) {
         //TODO(inter submission)
         //TODO(overview): create a file in output_file_folder("output/inter_submission/root*") and write the constructed string to the file
         //TODO(step1): extract the file_name from file_path using extract_filename() in utils.c
@@ -38,8 +38,7 @@ int main(int argc, char* argv[]) {
         char new_location[PATH_MAX];
         sprintf(new_location, "%s%s", output_file_folder, root_dir);
         //TODO(step4): create and write to file, and then close file
-        char filen[PATH_MAX];
-        sprintf(filen, "%s", file_name);
+        sprintf(new_location, "%s", file_name);
         FILE *fp = fopen(new_location, "w");
 
         if (fp == NULL) {

@@ -30,14 +30,9 @@ root_process.c:
 
 The root_process.c primarily functions to manage the communication between processes, extract file hashes, and take appropriate actions such as deleting duplicates or creating symbolic links.
 
+1. Parse command line inputs
 
-1. Parsing Command-Line Inputs
-Parse command line inputs
-
-
-2. Pipe Setup
-Construct pipe for communication with root directory non-leaf node
-
+2. Construct pipe for communication with root directory non-leaf node
 
 3. Forking Child Process
 Fork child process 
@@ -46,26 +41,20 @@ if Child:
 else:
     Continue in root_process.c
 
-
-4. Reading Hash Strings
-Read concatenated hash strings from the pipe
-
+4. Read concatenated hash strings from the pipe
 
 5. Parsing Hashes and Identifying Duplicates
 Use parse_hash() to parse the string
 Determine dup_list and retain_list variables
-
 
 6. Handling Duplicates
 For each file in dup_list:
     Delete file
     Create symbolic link to original
 
-
 7. Outputting Results
 Redirect standard output to an output file
 Print details about symbolic links and paths
-
 
 ---
 
@@ -73,38 +62,16 @@ nonleaf_process.c
 
 The nonleaf_process.c digs into the directory structures, separating files from directories. It also manages child processes for sub-directories and files.
 
-
 1. Initializing Variables and Memory Allocation
-char *dir_path = argv[1]
-char* pwrite_end = argv[2]
-Allocate memory for child_process_data
-
 
 2. Opening Directory
-Open directory using dir_path
-
 
 3. Iterating Through Directory Entries
-while reading each directory entry:
-    Create a new pipe
-    If entry is a directory:
-        Fork child process
-        Child executes nonleaf_process.c with dir entry
-    Else if entry is a file:
-        Fork child process
-        Child executes leaf_process.c with file
-    Close appropriate pipe ends
 
-
-4. Waiting and Gathering Data
-Wait for all child processes to finish
+4. Wait for all child processes to finish
 Collect data from reading ends of all child pipes
 
+5. Write aggregated data to pwrite_end
 
-5. Writing Data Upstream
-Write aggregated data to pwrite_end
-
-
-6. Cleanup
-Release dynamically allocated memory and close any open resources
+6. Free dynamically allocated memory and close any open files
 

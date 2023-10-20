@@ -49,6 +49,11 @@ final:
 	$(foreach root, $(ROOT_DIRS), $(call prepare_root_dir,$(root)))
 	$(foreach root, $(ROOT_DIRS), ./root_process ./root_directories/$(root);)
 
+outfolder:
+	mkdir -p -m 0777 output/inter_submission
+	mkdir -p -m 0777 output/final_submission
+	$(foreach root, $(ROOT_DIRS), mkdir -p -m 0777 output/inter_submission/$(root);)
+
 .PHONY: inter root1 root2 root3 final clean all
 
 clean:

@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
             exit(-1);
         }
 
-        fprintf(fp, "%s", file_hash);
+        fprintf(fp, "%s", message);
         //TODO(step5): free any arrays that are allocated using malloc!! Free the string returned from extract_root_directory()!! It is allocated using malloc in extract_root_directory()
         fclose(fp);
         free(root_dir);

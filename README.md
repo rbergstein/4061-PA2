@@ -14,11 +14,11 @@ csel-kh1250-02.cselabs.umn.edu
 
 ## Changes to Makefile
 
-(FILLER)
+Added to the inter: piece of the Makefile so that the correct output/inter_submission/root# directories as well as the output/final_submission directory match with what is expected.
 
 ## Individual Contributions: 
 
-Ryan: Created a group github repository to collectively work out of and set up the project files and README document.
+Ryan: Created a group github repository to collectively work out of and set up the project files and README document. Worked alongside group members to create and finalize leaf_process.c. Reorganized the Makefile to create the correct output/inter_submission/root# directories.
 
 Marwa: 
 

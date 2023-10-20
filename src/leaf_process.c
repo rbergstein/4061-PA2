@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     //TODO(): construct string write to pipe. The format is "<file_path>|<hash_value>"
     int length = 2 * sizeof(file_path) + sizeof(file_hash);
     char message[length];
-    sprintf(message, "%s|%s", file_path, file_hash);
+    sprintf(message, "%s|%s|", file_path, file_hash);
 
 
     if () {
@@ -55,6 +55,16 @@ int main(int argc, char* argv[]) {
 
     } else {
         //TODO(final submission): write the string to pipe
+        int fd[2];
+        int ret = pipe(fd);
+
+        if(ret == -1){
+            printf("Error creating pipe...\n");
+            exit(-1);
+        }
+
+        write(fd[pipe_write_end], message, strlen(message));
+        close(fd[pipe_write_end]);
 
         exit(0);
 

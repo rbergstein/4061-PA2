@@ -36,9 +36,9 @@ int main(int argc, char* argv[]) {
         char *root_dir = extract_root_directory(file_path); // returns "root1/"
         //TODO(step3): get the location of the new file (e.g. "output/inter_submission/root1" or "output/inter_submission/root2" or "output/inter_submission/root3")
         char new_location[PATH_MAX];
-        sprintf(new_location, "%s%s", output_file_folder, root_dir);
+        sprintf(new_location, "%s%s/%s", output_file_folder, root_dir, file_name);
         //TODO(step4): create and write to file, and then close file
-        sprintf(new_location, "%s", file_name);
+        printf("%s\n", new_location);
         FILE *fp = fopen(new_location, "w");
 
         if (fp == NULL) {

@@ -13,15 +13,42 @@ char *output_file_folder = "output/final_submission/";
 void redirection(char **dup_list, int size, char* root_dir){
     // TODO(overview): redirect standard output to an output file in output_file_folder("output/final_submission/")
     // TODO(step1): determine the filename based on root_dir. e.g. if root_dir is "./root_directories/root1", the output file's name should be "root1.txt"
+    char *root_dir = extract_root_directory(root_dir);
+    char root[strlen(root_dir) - 1]; //getting rid of the slash at the end of root dir
+    sprintf(root, "%s", root_dir);
 
+    char file_name[strlen(root) + 10];
+    sprintf(file_name, "%s.txt", root);
     //TODO(step2): redirect standard output to output file (output/final_submission/root*.txt)
+    int TEMP_STDOUT_FILENO = dup(STDOUT_FILENO);
+    int fp = open(file_name, WRITE, PERM);
 
+    if (fp == -1){
+        perror("Failed to open file\n");
+        exit(-1); 
+    }
+
+    if (dup2(fp, STDOUT_FILENO) == -1){
+        perror("Failed to redirect output\n");
+        exit(-1);
+    }
+    fflush(stdout);
+
+    if (dup2(TEMP_STDOUT_FILENO, STDOUT_FILENO) == -1){
+        perror("Failed to restore output\n");
+        exit(-1);
+    }
+    close(TEMP_STDOUT_FILENO);
+    close(fp);
     //TODO(step3): read the content each symbolic link in dup_list, write the path as well as the content of symbolic link to output file(as shown in expected)
-
+    for (int i=0; i < size; i++) {
+        
+    }
 }
 
 void create_symlinks(char **dup_list, char **retain_list, int size) {
     //TODO(): create symbolic link at the location of deleted duplicate file
+
     //TODO(): dup_list[i] will be the symbolic link for retain_list[i]
 
 }

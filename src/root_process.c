@@ -118,8 +118,8 @@ int main(int argc, char* argv[]) {
     //TODO(step3): malloc dup_list and retain list & use parse_hash() in utils.c to parse all_filepath_hashvalue
     // dup_list: list of paths of duplicate files. We need to delete the files and create symbolic links at the location
     // retain_list: list of paths of unique files. We will create symbolic links for those files
-    char **dup_list = (char **)malloc(sizeof(char *) * sizeof(dup_list));
-    char **retain_list = (char **)malloc(sizeof(char *) * sizeof(retain_list));
+    char **dup_list = (char **)malloc(sizeof(char *) * 10);
+    char **retain_list = (char **)malloc(sizeof(char *) * 10);
     parse_hash(all_filepath_hashvalue, dup_list, retain_list);
 
     //TODO(step4): implement the functions

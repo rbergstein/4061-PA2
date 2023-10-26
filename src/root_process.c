@@ -120,7 +120,17 @@ int main(int argc, char* argv[]) {
     // retain_list: list of paths of unique files. We will create symbolic links for those files
     char **dup_list = (char **)malloc(sizeof(char *) * 10);
     char **retain_list = (char **)malloc(sizeof(char *) * 10);
-    parse_hash(all_filepath_hashvalue, dup_list, retain_list);
+    if (!dup_list || !retain_list) {
+        fprintf(stderr, "Memory allocation failed!\n");
+        return 1;
+    }
+    
+    for (int i = 0; i < 10; i++) {
+        dup_list[i] = NULL;
+        retain_list[i] = NULL;
+    }
+
+    int size = parse_hash(all_filepath_hashvalue, dup_list, retain_list);
 
     //TODO(step4): implement the functions
     delete_duplicate_files(dup_list,size);
@@ -128,5 +138,11 @@ int main(int argc, char* argv[]) {
     redirection(dup_list, size, argv[1]);
 
     //TODO(step5): free any arrays that are allocated using malloc!!
+    for (int i = 0; i < 10; i++) {
+        if (dup_list[i]) free(dup_list[i]);
+        if (retain_list[i]) free(retain_list[i]);
+    }
+    
     free(dup_list);
     free(retain_list);
+}

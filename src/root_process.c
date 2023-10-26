@@ -98,14 +98,29 @@ int main(int argc, char* argv[]) {
     memset(all_filepath_hashvalue, 0, sizeof(all_filepath_hashvalue));// clean the buffer
 
     //TODO(step1): construct pipe
+    int fd[2];
+    int ret = pipe(fd);
 
+    if (ret == -1){
+            printf("Error creating pipe...\n");
+            exit(-1);
+    }
     //TODO(step2): fork() child process & read data from pipe to all_filepath_hashvalue
+    pid_t pid;
+    pid = fork();
+    if (pid == 0) {
+        close(fd[1]);
+        read(fd[0], all_filepath_hashvalue, sizeof(all_filepath_hashvalue));
+        close(fd[0]);
 
+    }
 
     //TODO(step3): malloc dup_list and retain list & use parse_hash() in utils.c to parse all_filepath_hashvalue
     // dup_list: list of paths of duplicate files. We need to delete the files and create symbolic links at the location
     // retain_list: list of paths of unique files. We will create symbolic links for those files
-
+    char **dup_list = (char **)malloc(sizeof(char *) * sizeof(dup_list));
+    char **retain_list = (char **)malloc(sizeof(char *) * sizeof(retain_list));
+    parse_hash(all_filepath_hashvalue, dup_list, retain_list);
 
     //TODO(step4): implement the functions
     delete_duplicate_files(dup_list,size);
@@ -115,4 +130,3 @@ int main(int argc, char* argv[]) {
     //TODO(step5): free any arrays that are allocated using malloc!!
     free(dup_list);
     free(retain_list);
-}

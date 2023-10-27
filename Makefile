@@ -32,6 +32,7 @@ define prepare_root_dir
 	find . -name '.DS_Store' -type f -delete
 	rm -rf ./root_directories/$(1)
 	cp -r ./root_directories/$(SOURCE_PREFIX)$(1) ./root_directories/$(1)
+	mkdir -p -m 0777 output/inter_submission/$(1)
 
 endef
 
@@ -48,6 +49,15 @@ root1 root2 root3:
 final:
 	$(foreach root, $(ROOT_DIRS), $(call prepare_root_dir,$(root)))
 	$(foreach root, $(ROOT_DIRS), ./root_process ./root_directories/$(root);)
+
+output/inter_submission/root1:
+	mkdir -p -m 0777 $@
+
+output/inter_submission/root2:
+	mkdir -p -m 0777 $@
+
+output/inter_submission/root3:
+	mkdir -p -m 0777 $@
 
 output/final_submission:
 	mkdir -p -m 0777 $@

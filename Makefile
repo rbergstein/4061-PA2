@@ -33,6 +33,7 @@ define prepare_root_dir
 	rm -rf ./root_directories/$(1)
 	cp -r ./root_directories/$(SOURCE_PREFIX)$(1) ./root_directories/$(1)
 	mkdir -p -m 0777 output/inter_submission/$(1)
+	mkdir -p -m 0777 output/final_submission/$(1)
 
 endef
 

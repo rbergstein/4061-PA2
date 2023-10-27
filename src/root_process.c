@@ -13,6 +13,7 @@ char *output_file_folder = "output/final_submission/";
 
 void redirection(char **dup_list, int size, char* root_dir){
     // TODO(overview): redirect standard output to an output file in output_file_folder("output/final_submission/")
+    
     // TODO(step1): determine the filename based on root_dir. e.g. if root_dir is "./root_directories/root1", the output file's name should be "root1.txt"
     char *root = extract_root_directory(root_dir); // should make fname = "root1" in above example
     // char root[strlen(root_dir) - 1]; //getting rid of the slash at the end of root dir
@@ -21,8 +22,11 @@ void redirection(char **dup_list, int size, char* root_dir){
     char file_name[strlen(root) + 10];
     sprintf(file_name, "%s.txt", root); // file_name should now = root1.txt
     //TODO(step2): redirect standard output to output file (output/final_submission/root*.txt)
+    char full_path[PATH_MAX];
+    sprintf(full_path, "%s%s", output_file_folder, file_name);
+
     int TEMP_STDOUT_FILENO = dup(STDOUT_FILENO);
-    int fp = open(file_name, WRITE, PERM);
+    int fp = open(full_path, WRITE, PERM);
 
     if (fp == -1){
         perror("Failed to open file\n");

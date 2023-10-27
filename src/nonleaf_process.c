@@ -14,14 +14,14 @@ int main(int argc, char* argv[]) {
     //TODO(overview): fork the child processes(non-leaf process or leaf process) each associated with items under <directory_path>
 
     //TODO(step1): get <file_path> <pipe_write_end> from argv[]
-    char *file_path = argv[1];
+    char *directory_path = argv[1];
     int pipe_write_end = atoi(argv[2]);
 
     //TODO(step2): malloc buffer for gathering all data transferred from child process as in root_process.c
-    char **child_data = (char **)malloc(sizeof(char *) * 20);
+    char *data_buffer = (char *) malloc(sizeof(char *) * 20);
 
     //TODO(step3): open directory
-    DIR *dir = opendir(file_path);
+    DIR *dir = opendir(directory_path);
     if (dir == NULL) {
         perror("Failed to open directory\n");
         exit(1);
@@ -40,22 +40,30 @@ int main(int argc, char* argv[]) {
         pid_t child;
         child = fork();
 
-        if (child == 0) { // child
+        if (child == 0) { // child - needs to read
             close(fd[1]);
+            close(pipe_write_end);
+
+            char bytes_read[PATH_MAX];
+            read(fd[0], bytes_read, sizeof(bytes_read)); // read from pipe to pass through execv
 
             if (entry->d_type == DT_DIR) { // check if directory
                 dup2(fd[0], STDIN_FILENO); // give read end to child (?)
 
-                char *child_arr[] = {"./nonleaf_process", argv[1], argv[2], NULL};
+                char *child_arr[] = {"./nonleaf_process", directory_path, bytes_read, NULL};
                 execv("./nonleaf_process", child_arr); // create a non-leaf process
             } else { // else entry is a file
                 dup2(fd[0], STDIN_FILENO); // give read end to child (?)
 
-                char *child_arr2[] = {"./leaf_process", argv[1], argv[2], NULL};
+                char *child_arr2[] = {"./leaf_process", directory_path, bytes_read, NULL};
                 execv("./leaf_process", child_arr2); // create a leaf-process
             }
 
-        }        
+        } else { // parent - needs to write
+            close(fd[0]);
+
+            write(pipe_write_end, data_buffer, sizeof(data_buffer)); // write to pipe to pass through execv
+        }
     }
     
 

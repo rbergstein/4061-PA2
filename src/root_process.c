@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
 
     //TODO(overview): fork the first non_leaf process associated with root directory("./root_directories/root*")
 
-    char* root_directory = argv[1];
+    // char* root_directory = argv[1];
     char all_filepath_hashvalue[4098]; //buffer for gathering all data transferred from child process
     memset(all_filepath_hashvalue, 0, sizeof(all_filepath_hashvalue));// clean the buffer
 

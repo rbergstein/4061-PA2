@@ -103,32 +103,45 @@ int main(int argc, char* argv[]) {
     //TODO(step2): fork() child process & read data from pipe to all_filepath_hashvalue
     pid_t pid;
     pid = fork();
-    if (pid == 0) {
-        //close(fd[1]);
+    if (pid != 0) {
+        close(fd[1]);
         //char bytes_read[PATH_MAX];
-        char write_buf[PATH_MAX];
-        sprintf(write_buf, "%d", fd[1]); //turning write end to string
+        // char write_buf[PATH_MAX];
+        // sprintf(write_buf, "%d", fd[1]); //turning write end to string
 
-        char *root = extract_root_directory(root_directory);
-        char full_path[PATH_MAX];
-        sprintf(full_path, "%s%s.txt", output_file_folder, root);
-        
+        // char *root = extract_root_directory(root_directory);
+        // char full_path[PATH_MAX];
+        // sprintf(full_path, "%s%s.txt", output_file_folder, root);
+  
         while(read(fd[0], all_filepath_hashvalue, sizeof(all_filepath_hashvalue)) != 0) { 
-                char *arr[] = {"./nonleaf_process", "./nonleaf_process", full_path, write_buf, NULL};
-                execv("./nonleaf_process", arr);
+                // char *arr[] = {"./nonleaf_process", "./nonleaf_process", full_path, write_buf, NULL};
+                // execv("./nonleaf_process", arr);
         }
 
         // read(fd[0], all_filepath_hashvalue, sizeof(all_filepath_hashvalue));
         // char *arr[] = {"./nonleaf_process", "./nonleaf_process", full_path, write_buf, NULL};
         // execv("./nonleaf_process", arr);
         
-        //execl("./nonleaf_process", "./nonleaf_process", "./nonleaf_process", full_path, write_buf, NULL);
-        
         // char *arr[] = {"./nonleaf_process", "./nonleaf_process", root_directory, fd[1], NULL};
         // execv("./leaf_process", arr);
-        close(fd[1]);
+
         //read(fd[0], all_filepath_hashvalue, sizeof(all_filepath_hashvalue));
         close(fd[0]);
+    }
+    else {
+        close(fd[0]);
+        char write_buf[PATH_MAX];
+        sprintf(write_buf, "%d", fd[1]); //turning write end to string
+
+        char *root = extract_root_directory(root_directory);
+        char full_path[PATH_MAX];
+        sprintf(full_path, "%s%s.txt", output_file_folder, root);
+
+        char *arr[] = {"./nonleaf_process", "./nonleaf_process", full_path, write_buf, NULL};
+        execv("./nonleaf_process", arr);
+
+        close(fd[1]);
+
     }
     //TODO(step3): malloc dup_list and retain list & use parse_hash() in utils.c to parse all_filepath_hashvalue
     // dup_list: list of paths of duplicate files. We need to delete the files and create symbolic links at the location

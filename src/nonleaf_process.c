@@ -17,6 +17,7 @@ int main(int argc, char* argv[]) {
     //TODO(step1): get <file_path> <pipe_write_end> from argv[]
     //char *file_path = argv[1];
     char *directory_path = argv[1];
+    printf("Dir path: %s\n", directory_path);
     int pipe_write_end = atoi(argv[2]);
 
     //TODO(step2): malloc buffer for gathering all data transferred from child process as in root_process.c

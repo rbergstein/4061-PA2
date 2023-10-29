@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     //TODO(step1): get <file_path> <pipe_write_end> from argv[]
     //char *file_path = argv[1];
     char *directory_path = argv[1];
-    printf("Dir path: %s\n", directory_path);
+    // printf("Dir path: %s\n", directory_path);
     int pipe_write_end = atoi(argv[2]);
 
     //TODO(step2): malloc buffer for gathering all data transferred from child process as in root_process.c
@@ -99,6 +99,19 @@ int main(int argc, char* argv[]) {
     closedir(dir);
     while (wait(NULL) > 0);
 
+    // ssize_t bytes_read;
+    // ssize_t pos;
+    // char final_buffer[PATH_MAX];
+    // memset(final_buffer, 0, sizeof(final_buffer));
+
+    // for (int i=0; i < counter; i++) {
+    //     while ((bytes_read = read(read_ends[i], final_buffer + pos, sizeof(final_buffer))) > 0) {
+    //         pos += bytes_read;
+    //     };
+    //     close(read_ends[i]);
+    // }
+    // write(pipe_write_end, final_buffer, pos);
+
     char bytes_read[PATH_MAX];
     char final_buffer[PATH_MAX];
 
@@ -113,6 +126,7 @@ int main(int argc, char* argv[]) {
     }
     
     write(pipe_write_end, final_buffer, sizeof(final_buffer));
+    printf("---------------------: %s", final_buffer);
     close(pipe_write_end);
 
     //TODO(step5): read from pipe constructed for child process and write to pipe constructed for parent process

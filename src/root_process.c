@@ -14,9 +14,10 @@ void redirection(char **dup_list, int size, char* root_dir){
     
     // TODO(step1): determine the filename based on root_dir. e.g. if root_dir is "./root_directories/root1", the output file's name should be "root1.txt"
     char *root = extract_root_directory(root_dir); // should make fname = "root1" in above example
-    printf("%s", root);
+    // printf("%s", root);
     char file_name[strlen(root) + 10];
     sprintf(file_name, "%s.txt", root); // file_name should now = root1.txt
+
     //TODO(step2): redirect standard output to output file (output/final_submission/root*.txt)
     char full_path[PATH_MAX];
     sprintf(full_path, "%s%s", output_file_folder, file_name);
@@ -41,12 +42,8 @@ void redirection(char **dup_list, int size, char* root_dir){
     //TODO(step3): read the content each symbolic link in dup_list, write the path as well as the content of symbolic link to output file(as shown in expected)
     for (int i=0; i < size; i++) {
         char buf[PATH_MAX];
-        // int links = open(dup_list[i], O_RDONLY);
-        // if (links == -1) {
-        //     perror("Failed to open symbolic link file\n");
-        //     exit(-1);
-        // }
-        ssize_t retained_path = readlink(dup_list[i], buf, sizeof(buf)-1); // prof suggested to use a linux func to get path on piazza, not sure if readlink is right
+
+        ssize_t retained_path = readlink(dup_list[i], buf, sizeof(buf)-1); // prof suggested to use a linux func to get path on piazza
         if (retained_path == -1) {
             perror("Failed to read symbolic link\n");
             exit(-1);
@@ -89,9 +86,9 @@ int main(int argc, char* argv[]) {
     //TODO(overview): fork the first non_leaf process associated with root directory("./root_directories/root*")
 
     char* root_directory = argv[1];
-    // char* root_directory = argv[1];
+    // printf("THIS IS THE ROOT PATH: %s\n\n", root_directory);
     char all_filepath_hashvalue[4098]; //buffer for gathering all data transferred from child process
-    memset(all_filepath_hashvalue, 0, sizeof(all_filepath_hashvalue));// clean the buffer
+    memset(all_filepath_hashvalue, 0, sizeof(all_filepath_hashvalue)); // clean the buffer
 
     //TODO(step1): construct pipe
     int fd[2];
@@ -113,7 +110,7 @@ int main(int argc, char* argv[]) {
         // char full_path[PATH_MAX];
         // sprintf(full_path, "%s%s.txt", output_file_folder, root);
   
-        while(read(fd[0], all_filepath_hashvalue, sizeof(all_filepath_hashvalue)) != 0) { 
+        while (read(fd[0], all_filepath_hashvalue, sizeof(all_filepath_hashvalue)) != 0) { 
                 // char *arr[] = {"./nonleaf_process", "./nonleaf_process", full_path, write_buf, NULL};
                 // execv("./nonleaf_process", arr);
         }

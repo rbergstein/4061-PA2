@@ -137,7 +137,7 @@ int main(int argc, char* argv[]) {
         char full_path[PATH_MAX];
         sprintf(full_path, "%s%s.txt", output_file_folder, root);
 
-        char *arr[] = {"./nonleaf_process", "./nonleaf_process", full_path, write_buf, NULL};
+        char *arr[] = {"./nonleaf_process", full_path, write_buf, NULL};
         execv("./nonleaf_process", arr);
 
         close(fd[1]);

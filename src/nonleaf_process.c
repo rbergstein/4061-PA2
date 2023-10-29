@@ -39,6 +39,11 @@ int main(int argc, char* argv[]) {
     int counter = 0;
 
     while ((entry = readdir(dir)) != NULL) {
+
+        if ((strcmp(entry->d_name, ".") == 0) || (strcmp(entry->d_name, "..") == 0)) {
+            continue;
+        }
+
         int fd[2];
         if (pipe(fd) == -1) {
             perror("Failed to create pipe\n");
@@ -126,7 +131,7 @@ int main(int argc, char* argv[]) {
     }
     
     write(pipe_write_end, final_buffer, sizeof(final_buffer));
-    printf("---------------------: %s", final_buffer);
+    //printf("---------------------: %s", final_buffer);
     close(pipe_write_end);
 
     //TODO(step5): read from pipe constructed for child process and write to pipe constructed for parent process

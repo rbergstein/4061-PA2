@@ -22,7 +22,7 @@ Ryan: Created a group github repository to collectively work out of and set up t
 
 Marwa: Worked on leaf_process, specifically extracting root and file names and writing hash to new file. Helped group members debug and finalize leaf_process.c. Wrote logic for nonleaf_process.c and wrote logic for constructing and reading/writing from pipes in root_process.c. Attended office hours and worked with group members to debug and finalize the code. 
 
-Basma: Worked on final debugging as long as attending TA office hours for extra help, wrote the plan for completing the rest of the project
+Basma: Worked on final debugging as long as attending TA office hours for extra help, wrote the plan for completing the rest of the project. Consulted various online resources and engaged in in-person discussions to gather inspiration and ensure comprehensive documentation.
 
 ## Plan for how you are going to construct the pipes and inter-process communication
 

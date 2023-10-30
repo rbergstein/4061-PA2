@@ -18,7 +18,7 @@ Added to the inter: piece of the Makefile so that the correct output/inter_submi
 
 ## Individual Contributions: 
 
-Ryan: Created a group github repository to collectively work out of and set up the project files and README document. Worked alongside group members to create and finalize leaf_process.c. Reorganized the Makefile to create the correct output/inter_submission/root# directories.
+Ryan: Created a group github repository to collectively work out of and set up the project files and README document. Worked alongside group members to create and finalize leaf_process.c. Reorganized the Makefile to create the correct output/inter_submission/root# directories. Collectively worked to write nonleaf_process.c and root_process.c with group mates. Also spent a lot of time debugging to try and find errors with writing to the pipes/files.
 
 Marwa: Worked on leaf_process, specifically extracting root and file names and writing hash to new file. Helped group members debug and finalize leaf_process.c. 
 
@@ -74,4 +74,3 @@ Collect data from reading ends of all child pipes
 5. Write aggregated data to pwrite_end
 
 6. Free dynamically allocated memory and close any open files
-

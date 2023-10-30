@@ -14,7 +14,7 @@ void redirection(char **dup_list, int size, char* root_dir){
     
     // TODO(step1): determine the filename based on root_dir. e.g. if root_dir is "./root_directories/root1", the output file's name should be "root1.txt"
     char *root = extract_root_directory(root_dir); // should make fname = "root1" in above example
-    printf("%s", root);
+    //printf("%s", root);
     char file_name[strlen(root) + 10];
     sprintf(file_name, "%s.txt", root); // file_name should now = root1.txt
     //TODO(step2): redirect standard output to output file (output/final_submission/root*.txt)
@@ -107,7 +107,8 @@ int main(int argc, char* argv[]) {
     if (pid != 0) {
         wait(NULL);
         int nbytes;
-        char bytes_read[PATH_MAX];
+        char bytes_read[4098];
+        memset(bytes_read, 0, sizeof(bytes_read));
         close(fd[1]);
   
         while((nbytes = read(fd[0], bytes_read, sizeof(bytes_read))) != 0) { 
@@ -122,9 +123,9 @@ int main(int argc, char* argv[]) {
     }
 
     else {
-        //wait(NULL);
         close(fd[0]);
-        char write_buf[PATH_MAX];
+        char write_buf[4098];
+        memset(write_buf, 0, sizeof(write_buf));
         sprintf(write_buf, "%d", fd[1]); //turning write end to string
 
         //write(fd[1], all_filepath_hashvalue, strlen(all_filepath_hashvalue));
@@ -146,10 +147,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     
-    for (int i = 0; i < 10; i++) {
-        dup_list[i] = NULL;
-        retain_list[i] = NULL;
-    }
+    // for (int i = 0; i < 10; i++) {
+    //     dup_list[i] = NULL;
+    //     retain_list[i] = NULL;
+    // }
     printf("All filepath hash: %s\n", all_filepath_hashvalue);
     int size = parse_hash(all_filepath_hashvalue, dup_list, retain_list);
     printf("Size: %d\n", size);
@@ -170,11 +171,14 @@ int main(int argc, char* argv[]) {
     create_symlinks(dup_list, retain_list, size);
     redirection(dup_list, size, argv[1]);
     //TODO(step5): free any arrays that are allocated using malloc!!
+    // for (int i = 0; i < 10; i++) {
+    //     if (dup_list[i]) free(dup_list[i]);
+    //     if (retain_list[i]) free(retain_list[i]);
+    // }
     for (int i = 0; i < 10; i++) {
-        if (dup_list[i]) free(dup_list[i]);
-        if (retain_list[i]) free(retain_list[i]);
+        dup_list[i] = NULL;
+        retain_list[i] = NULL;
     }
-    
     free(dup_list);
     free(retain_list);
 

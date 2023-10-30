@@ -13,15 +13,11 @@ void redirection(char **dup_list, int size, char* root_dir){
     // TODO(overview): redirect standard output to an output file in output_file_folder("output/final_submission/")
     
     // TODO(step1): determine the filename based on root_dir. e.g. if root_dir is "./root_directories/root1", the output file's name should be "root1.txt"
-    char *root = extract_root_directory(root_dir); // should make fname = "root1" in above example
-    //printf("%s", root);
-    char file_name[strlen(root) + 10];
-    sprintf(file_name, "%s.txt", root); // file_name should now = root1.txt
-    //TODO(step2): redirect standard output to output file (output/final_submission/root*.txt)
-    char full_path[PATH_MAX];
-    sprintf(full_path, "%s%s", output_file_folder, file_name);
+  
+    char full_path[1024];
+    char *root = extract_filename(root_dir);
+    sprintf(full_path, "%s%s.txt", output_file_folder, root);
 
-    //int TEMP_STDOUT_FILENO = dup(STDOUT_FILENO);
     int fp = open(full_path, WRITE, PERM);
     if (fp == -1){
         perror("Failed to open file\n");
@@ -31,32 +27,23 @@ void redirection(char **dup_list, int size, char* root_dir){
         perror("Failed to redirect output\n");
         exit(-1);
     }
-    // fflush(stdout);
-    // if (dup2(TEMP_STDOUT_FILENO, STDOUT_FILENO) == -1){
-    //     perror("Failed to restore output\n");
-    //     exit(-1);
-    // }
-    // close(TEMP_STDOUT_FILENO);
+
     close(fp);
     //TODO(step3): read the content each symbolic link in dup_list, write the path as well as the content of symbolic link to output file(as shown in expected)
     for (int i=0; i < size; i++) {
         char buf[PATH_MAX];
-        // int links = open(dup_list[i], O_RDONLY);
-        // if (links == -1) {
-        //     perror("Failed to open symbolic link file\n");
-        //     exit(-1);
-        // }
+        
         ssize_t retained_path = readlink(dup_list[i], buf, sizeof(buf)-1); // prof suggested to use a linux func to get path on piazza, not sure if readlink is right
         if (retained_path == -1) {
             perror("Failed to read symbolic link\n");
             exit(-1);
         }
-        buf[retained_path] = '\0';
-        //fprintf(stdout, "[<path of symbolic link> --> <path of retained file>] : [%s --> %s]\n", dup_list[i], buf); 
+        buf[retained_path] = '\0'; 
         printf("[<path of symbolic link> --> <path of retained file>] : [%s --> %s]\n", dup_list[i], buf); 
         fflush(stdout);
     
     }
+    
 }
 void create_symlinks(char **dup_list, char **retain_list, int size) {
     //TODO(): create symbolic link at the location of deleted duplicate file
@@ -89,8 +76,8 @@ int main(int argc, char* argv[]) {
     //TODO(overview): fork the first non_leaf process associated with root directory("./root_directories/root*")
 
     char* root_directory = argv[1];
-    printf("Root directory: %s\n", root_directory);
-    // char* root_directory = argv[1];
+    //printf("Root directory: %s\n", root_directory);
+
     char all_filepath_hashvalue[4098]; //buffer for gathering all data transferred from child process
     memset(all_filepath_hashvalue, 0, sizeof(all_filepath_hashvalue));// clean the buffer
 
@@ -113,10 +100,7 @@ int main(int argc, char* argv[]) {
   
         while((nbytes = read(fd[0], bytes_read, sizeof(bytes_read))) != 0) { 
                 strncat(all_filepath_hashvalue, bytes_read, nbytes);
-                // char *arr[] = {"./nonleaf_process", "./nonleaf_process", full_path, write_buf, NULL};
-                // execv("./nonleaf_process", arr);
                 memset(bytes_read, 0, sizeof(bytes_read));
-               
         }
 
         close(fd[0]);
@@ -128,7 +112,6 @@ int main(int argc, char* argv[]) {
         memset(write_buf, 0, sizeof(write_buf));
         sprintf(write_buf, "%d", fd[1]); //turning write end to string
 
-        //write(fd[1], all_filepath_hashvalue, strlen(all_filepath_hashvalue));
         char *arr[] = {"./nonleaf_process", root_directory, write_buf, NULL};
         execv("./nonleaf_process", arr);
 
@@ -151,36 +134,34 @@ int main(int argc, char* argv[]) {
     //     dup_list[i] = NULL;
     //     retain_list[i] = NULL;
     // }
-    printf("All filepath hash: %s\n", all_filepath_hashvalue);
+    //printf("All filepath hash: %s\n", all_filepath_hashvalue);
     int size = parse_hash(all_filepath_hashvalue, dup_list, retain_list);
-    printf("Size: %d\n", size);
+    //printf("Size: %d\n", size);
 
     // Print the results for verification (optional)
-    printf("Duplicate files:\n");
-    for (int i = 0; i < size; i++) {
-        printf("%s\n", dup_list[i]);
-    }
+    // printf("Duplicate files:\n");
+    // for (int i = 0; i < size; i++) {
+    //     printf("%s\n", dup_list[i]);
+    // }
 
-    printf("\nRetained files:\n");
-    for (int i = 0; i < size; i++) {
-        printf("%s\n", retain_list[i]);
-    }
+    // printf("\nRetained files:\n");
+    // for (int i = 0; i < size; i++) {
+    //     printf("%s\n", retain_list[i]);
+    // }
 
     //TODO(step4): implement the functions
     delete_duplicate_files(dup_list,size);
     create_symlinks(dup_list, retain_list, size);
     redirection(dup_list, size, argv[1]);
     //TODO(step5): free any arrays that are allocated using malloc!!
-    // for (int i = 0; i < 10; i++) {
-    //     if (dup_list[i]) free(dup_list[i]);
-    //     if (retain_list[i]) free(retain_list[i]);
-    // }
+
     for (int i = 0; i < 10; i++) {
         dup_list[i] = NULL;
         retain_list[i] = NULL;
     }
     free(dup_list);
     free(retain_list);
+    
 
     return 0;
 }

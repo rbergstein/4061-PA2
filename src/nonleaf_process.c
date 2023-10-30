@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
     closedir(dir);
     //printf("final buffer--------------: %s\n", final_buffer);
     close(pipe_write_end);
-
+    free(final_buffer);
     //TODO(step5): read from pipe constructed for child process and write to pipe constructed for parent process
         
 }

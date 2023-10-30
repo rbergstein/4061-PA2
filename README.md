@@ -24,7 +24,7 @@ Marwa: Worked on leaf_process, specifically extracting root and file names and w
 
 Basma: Worked on final debugging as long as attending TA office hours for extra help, wrote the plan for completing the rest of the project
 
-## Plan for how you are going to construct the pipes and inter-process communication. (high-level pseudocode would be acceptable/preferred for this part)
+## Plan for how you are going to construct the pipes and inter-process communication
 
 root_process.c:
 

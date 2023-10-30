@@ -54,18 +54,18 @@ int main(int argc, char* argv[]) {
 
     } else {
         //TODO(final submission): write the string to pipe
-        int fd[2];
-        int ret = pipe(fd);
+        // int fd[2];
+        // int ret = pipe(fd);
 
-        if(ret == -1){
-            printf("Error creating pipe...\n");
-            exit(-1);
-        }
+        // if(ret == -1){
+        //     printf("Error creating pipe...\n");
+        //     exit(-1);
+        // }
 
-        write(fd[pipe_write_end], message, strlen(message));
-        close(fd[pipe_write_end]);
+        write(pipe_write_end, message, strlen(message));
+        close(pipe_write_end);
 
-        exit(0);
+        //exit(0);
 
     }
 

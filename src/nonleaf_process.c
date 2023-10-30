@@ -15,6 +15,7 @@ int main(int argc, char* argv[]) {
     //TODO(overview): fork the child processes(non-leaf process or leaf process) each associated with items under <directory_path>
 
     //TODO(step1): get <file_path> <pipe_write_end> from argv[]
+    //char *file_path = argv[1];
     char *directory_path = argv[1];
     // printf("Dir path: %s\n", directory_path);
     int pipe_write_end = atoi(argv[2]);
@@ -38,6 +39,7 @@ int main(int argc, char* argv[]) {
     int counter = 0;
 
     while ((entry = readdir(dir)) != NULL) {
+
         if ((strcmp(entry->d_name, ".") == 0) || (strcmp(entry->d_name, "..") == 0)) {
             continue;
         }
@@ -55,34 +57,58 @@ int main(int argc, char* argv[]) {
 
         //if (child == 0) { // child
         if (child == 0) { // child - needs to read
-            close(fd[1]);
-            
-            char final_path[PATH_MAX];
-            char write_buf[PATH_MAX];
+            //close(fd[1]);
+            //close(pipe_write_end);
+            char write_buf[1024];
+            //memset(write_buf, 0, (1024 * sizeof(write_buf)));
 
-            sprintf(final_path, "%s/%s", directory_path, entry->d_name);
-            sprintf(write_buf, "%d", fd[1]); //turning write end to string
+            //char bytes_read[PATH_MAX];
+            //read(fd[0], bytes_read, sizeof(bytes_read)); // read from pipe to pass through execv
 
             if (entry->d_type == DT_DIR) { // check if directory
+                close(fd[0]);
+                //dup2(fd[0], STDIN_FILENO); // give read end to child (?)
+
+                //char *child_arr[] = {"./nonleaf_process", argv[1], argv[2], NULL};
+                char final_path[1024];
+                //memset(final_path, 0, (1024 * sizeof(final_path)));
+                sprintf(final_path, "%s/%s", directory_path, entry->d_name);
+                sprintf(write_buf, "%d", fd[1]); //turning write end to string
                 char *child_arr[] = {"./nonleaf_process", final_path, write_buf, NULL};
-                if (execv("./nonleaf_process", child_arr) == -1) { // non-leaf process
+                //execv("./nonleaf_process", child_arr); // create a non-leaf process
+                if (execv("./nonleaf_process", child_arr) == -1) {
                     printf("Error in exec %d", errno);
                     exit(-1);
                 }
+                //close(fd[1]);
 
-            } else { // else entry is a file    
+            } else { // else entry is a file
+                close(fd[0]);
+                //dup2(fd[0], STDIN_FILENO); // give read end to child (?)
+
+                //char *child_arr2[] = {"./leaf_process", argv[1], argv[2], NULL};
+                char final_path[1024];
+                //memset(final_path, 0, (1024 * sizeof(final_path)));
+                sprintf(final_path, "%s/%s", directory_path, entry->d_name);
+                sprintf(write_buf, "%d", fd[1]); //turning write end to string
                 char *child_arr2[] = {"./leaf_process", final_path, write_buf, NULL};
-                if (execv("./leaf_process", child_arr2) == -1) { // leaf process
-                    printf("Error in exec %d", errno); 
+                if (execv("./leaf_process", child_arr2) == -1) {
+                    printf("Error in exec %d", errno);
                     exit(-1);
-                }
+                } // create a leaf-process
+                //close(fd[1]);
             }
 
         } 
         close(fd[1]);       
-    }
+        //} 
+        // else { // parent - needs to write
+        //     close(fd[0]);
 
-    closedir(dir);
+        //     write(pipe_write_end, data_buffer, sizeof(data_buffer)); // write to pipe to pass through execv
+        // }
+    }
+    //closedir(dir);
     while (wait(NULL) > 0);
 
     // ssize_t bytes_read;
@@ -98,21 +124,26 @@ int main(int argc, char* argv[]) {
     // }
     // write(pipe_write_end, final_buffer, pos);
 
-    char bytes_read[PATH_MAX];
-    char final_buffer[PATH_MAX];
-    memset(final_buffer, 0, sizeof(final_buffer));
+    char bytes_read[1024];
+    //char final_buffer[4098];
+    int nbytes;
+    char *final_buffer = (char *)malloc(4098 * sizeof(char));
 
     for (int i=0; i < counter; i++) {
-        ssize_t bytes = 0;
-        while ((bytes = read(read_ends[i], bytes_read, sizeof(bytes_read))) > 0) {
-            strcat(final_buffer, bytes_read);  
+        while((nbytes = read(read_ends[i], bytes_read, sizeof(bytes_read))) != 0) {
+            strncat(final_buffer, bytes_read, nbytes);
+            printf("byte read: %s\n", bytes_read);
+            memset(bytes_read, 0, (1024 * sizeof(bytes_read)));
+
+            printf("final buffer --------------: %s\n", final_buffer);
         };
         close(read_ends[i]);
 
     }
     
-    write(pipe_write_end, final_buffer, strlen(final_buffer));
-    printf("  - final buffer: %s\n", final_buffer);
+    write(pipe_write_end, final_buffer, sizeof(final_buffer));
+    closedir(dir);
+    //printf("---------------------: %s\n", final_buffer);
     close(pipe_write_end);
 
     //TODO(step5): read from pipe constructed for child process and write to pipe constructed for parent process

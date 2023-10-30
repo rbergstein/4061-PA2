@@ -20,7 +20,7 @@ Added to the inter: piece of the Makefile so that the correct output/inter_submi
 
 Ryan: Created a group github repository to collectively work out of and set up the project files and README document. Worked alongside group members to create and finalize leaf_process.c. Reorganized the Makefile to create the correct output/inter_submission/root# directories. Collectively worked to write nonleaf_process.c and root_process.c with group mates. Also spent a lot of time debugging to try and find errors with writing to the pipes/files.
 
-Marwa: Worked on leaf_process, specifically extracting root and file names and writing hash to new file. Helped group members debug and finalize leaf_process.c. Wrote logic for nonleaf_process.c and wrote logic for constructing and reading/writing in root_process.c. Worked with group members and attended office hours to debug and finalize the code. 
+Marwa: Worked on leaf_process, specifically extracting root and file names and writing hash to new file. Helped group members debug and finalize leaf_process.c. Wrote logic for nonleaf_process.c and wrote logic for constructing and reading/writing from pipes in root_process.c. Attended office hours and worked with group members to debug and finalize the code. 
 
 Basma: Worked on final debugging as long as attending TA office hours for extra help, wrote the plan for completing the rest of the project
 
